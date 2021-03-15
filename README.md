@@ -1,4 +1,4 @@
-# 🐙🐱🖥️ octotui - GitHub terminal client to search and display users stats
+# 🐙🐱🖥️ octotui - GitHub stats visualizer
 On top of <a href="https://github.com/irevenko/octostats">octostats</a>
 
 # ToDo
