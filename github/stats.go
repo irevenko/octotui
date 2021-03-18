@@ -17,11 +17,11 @@ func FetchStats(ctx context.Context, restClient *github.Client, qlClient *github
 	totalStars := r.TotalStars(restClient, allRepos)
 	totalForks := r.TotalForks(restClient, allRepos)
 
-	contribs := g.AllContributions(qlClient, "irevenko", 2020, 2021)
+	contribs := g.AllContributions(qlClient, username, 2020, 2021)
 
-	var allCommits githubv4.Int
-	var allIssues githubv4.Int
-	var allPrs githubv4.Int
+	var allCommits int
+	var allIssues int
+	var allPrs int
 
 	for _, v := range contribs.CommitContributionsByRepository {
 		allCommits += v.Contributions.TotalCount
