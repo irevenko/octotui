@@ -3,13 +3,15 @@ Data -  <a href="https://github.com/irevenko/octostats">octostats</a>
 TUI - <a href="https://github.com/gizak/termui">termui</a> 
 
 # TUI
-- Profile Image & user basic info
-- Langs by commits, repos (pie chart and mb somehting else)
-- stars forks per Language, favorite license
-- Most starred, forked repos, 
-- Total forks, stars, watchers, commits, prs, issues
+- [x] Profile Image & user basic info
+- Langs by commits, repos (pie or bar)
+- stars, forks per Language
+- Most starred, forked repos
 - Contribs graph
 
 # ToDo
-- Add sponsoring for orgs
+- Fix year span (get curr month in octostats)
+- Fix graphql pagination (first 100)
+- rewrite everything to graphql (performance boost)
 - graceful exit ?termenv
+- orgzanization support

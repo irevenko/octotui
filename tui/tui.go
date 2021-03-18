@@ -24,13 +24,15 @@ func RenderStats(username string) {
 	defer ui.Close()
 
 	user := g.UserDetails(qlClient, username)
-	p := SetupProfileInfo(user.Name)
+	p := SetupProfileInfo(user)
+	p2 := SetupProfileStats(user)
+	pc := SetupLangsByCommits(user)
 
 	img, images := SetupImage(user.AvatarURL, user.Login)
 
 	render := func() {
 		img.Image = images[0]
-		ui.Render(img, p)
+		ui.Render(img, p, p2, pc)
 	}
 	render()
 

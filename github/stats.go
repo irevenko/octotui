@@ -9,31 +9,29 @@ import (
 	"github.com/shurcooL/githubv4"
 )
 
-func FetchStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string) (langs []string, stars int, forks int) {
+func FetchStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string) (int, int, int, int, int) {
 	allRepos := r.AllRepos(ctx, restClient, username)
-
-	usedLangs, _ := r.LanguagesByRepo(restClient, allRepos)
 
 	totalStars := r.TotalStars(restClient, allRepos)
 	totalForks := r.TotalForks(restClient, allRepos)
 
 	contribs := g.AllContributions(qlClient, username, 2020, 2021)
 
-	var allCommits int
-	var allIssues int
-	var allPrs int
+	var totalCommits int
+	var totalIssues int
+	var totalPrs int
 
 	for _, v := range contribs.CommitContributionsByRepository {
-		allCommits += v.Contributions.TotalCount
+		totalCommits += v.Contributions.TotalCount
 	}
 
 	for _, v := range contribs.IssueContributionsByRepository {
-		allIssues += v.Contributions.TotalCount
+		totalIssues += v.Contributions.TotalCount
 	}
 
 	for _, v := range contribs.PullRequestContributionsByRepository {
-		allPrs += v.Contributions.TotalCount
+		totalPrs += v.Contributions.TotalCount
 	}
 
-	return usedLangs, totalStars, totalForks
+	return totalStars, totalForks, totalCommits, totalIssues, totalPrs
 }
