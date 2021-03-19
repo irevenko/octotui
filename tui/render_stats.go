@@ -24,15 +24,21 @@ func RenderStats(username string) {
 	defer ui.Close()
 
 	user := g.UserDetails(qlClient, username)
+
 	p := SetupProfileInfo(user)
 	p2 := SetupProfileStats(user)
+	p3 := SetupReposStats(user)
 	pc := SetupLangsByCommits(user)
+	pc2 := SetupLangsByRepo(user)
+	sl := SetupContribsSparkline(user)
+	bc := SetupStarsPerLangs(user)
+	bc2 := SetupForksPerLangs(user)
 
 	img, images := SetupImage(user.AvatarURL, user.Login)
 
 	render := func() {
 		img.Image = images[0]
-		ui.Render(img, p, p2, pc)
+		ui.Render(img, p, p2, pc, pc2, sl, bc, bc2, p3)
 	}
 	render()
 

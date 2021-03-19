@@ -66,7 +66,8 @@ func buildProfileStats(user g.User) string {
 	allRepos := r.AllRepos(ctx, client, user.Login)
 	usedLicenses, _ := r.MostUsedLicenses(client, allRepos)
 
-	baseStats = "[Total stars:](fg:magenta) " + strconv.Itoa(s) + "\n" +
+	baseStats = "Profile Statistics" + "\n" +
+		"[Total stars:](fg:magenta) " + strconv.Itoa(s) + "\n" +
 		"[Total forks:](fg:magenta) " + strconv.Itoa(f) + "\n" +
 		"[Total commits (2021):](fg:magenta) " + strconv.Itoa(c) + "\n" +
 		"[Total issues (2021):](fg:magenta) " + strconv.Itoa(i) + "\n" +
@@ -79,7 +80,27 @@ func buildProfileStats(user g.User) string {
 		"[Sponsors:](fg:magenta) " + strconv.Itoa(len(user.SponsorshipsAsMaintainer.Nodes)) + "\n" +
 		"[Sponsoring:](fg:magenta) " + strconv.Itoa(len(user.SponsorshipsAsSponsor.Nodes)) + "\n" +
 		"[Watching:](fg:magenta) " + strconv.Itoa(user.Watching.TotalCount) + " repos\n" +
-		"[Favorite licenses:](fg:magenta) " + usedLicenses[0] + ", " + usedLicenses[1] + ", " + usedLicenses[2]
+		"[Favorite licenses:](fg:magenta) " + usedLicenses[0]
 
 	return baseStats
+}
+
+func buildReposStats(user g.User) string {
+	var baseRepos string
+
+	allRepos := r.AllRepos(ctx, client, user.Login)
+
+	starredRepos, starredNums := r.MostStarredRepos(client, allRepos)
+	forkedRepos, forkedNums := r.MostForkedRepos(client, allRepos)
+
+	baseRepos = "Most starred repos" + "\n" +
+		"[" + starredRepos[0] + ":](fg:red) " + strconv.Itoa(starredNums[0]) + "\n" +
+		"[" + starredRepos[1] + ":](fg:red) " + strconv.Itoa(starredNums[1]) + "\n" +
+		"[" + starredRepos[2] + ":](fg:red) " + strconv.Itoa(starredNums[2]) + "\n" +
+		"Most forked repos" + "\n" +
+		"[" + forkedRepos[0] + ":](fg:red) " + strconv.Itoa(forkedNums[0]) + "\n" +
+		"[" + forkedRepos[1] + ":](fg:red) " + strconv.Itoa(forkedNums[1]) + "\n" +
+		"[" + forkedRepos[2] + ":](fg:red) " + strconv.Itoa(forkedNums[2])
+
+	return baseRepos
 }
