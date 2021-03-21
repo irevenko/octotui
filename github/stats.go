@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/go-github/github"
 	g "github.com/irevenko/octostats/graphql"
@@ -9,13 +10,12 @@ import (
 	"github.com/shurcooL/githubv4"
 )
 
-func FetchStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string) (int, int, int, int, int) {
-	allRepos := r.AllRepos(ctx, restClient, username)
-
+func FetchStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string, allRepos []*github.Repository) (int, int, int, int, int) {
 	totalStars := r.TotalStars(restClient, allRepos)
 	totalForks := r.TotalForks(restClient, allRepos)
 
-	contribs := g.AllContributions(qlClient, username, 2020, 2021)
+	year, _, _ := time.Now().Date()
+	contribs := g.AllContributions(qlClient, username, year-1, year)
 
 	var totalCommits int
 	var totalIssues int

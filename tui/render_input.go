@@ -14,17 +14,22 @@ func RenderInput() {
 	}
 	defer ui.Close()
 
+	p := widgets.NewParagraph()
+	p.WrapText = true
+	p.Text = "Enter GitHub username or organization name"
+	p.Border = true
+	p.SetRect(0, 0, 45, 4)
+
 	i := widgets.NewTextBox()
-	i.SetRect(1, 1, 40, 4)
+	i.SetRect(0, 4, 45, 7)
 	i.ShowCursor = true
 
-	ui.Render(i)
+	ui.Render(i, p)
 
 	for e := range ui.PollEvents() {
 		if e.Type == ui.KeyboardEvent {
 			switch e.ID {
 			case "<C-c>":
-				ui.Close()
 				return
 			case "<Left>":
 				i.MoveCursorLeft()
@@ -34,7 +39,7 @@ func RenderInput() {
 				i.Backspace()
 			case "<Enter>":
 				user := i.GetText()
-				results := gh.SearchUser(ctx, client, user)
+				results := gh.SearchUser(ctx, restClient, user)
 				RenderList(results)
 			case "<Space>":
 				i.InsertText(" ")

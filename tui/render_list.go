@@ -27,9 +27,9 @@ func RenderList(results *github.UsersSearchResult) {
 
 	l.Title = "Search Results"
 	l.Rows = rowsData
-	l.TextStyle = ui.NewStyle(ui.ColorGreen)
+	l.TextStyle = ui.NewStyle(ui.ColorRed)
 	l.WrapText = true
-	l.SetRect(1, 4, 100, 30)
+	l.SetRect(0, 7, 100, 30)
 
 	ui.Render(l)
 
@@ -38,7 +38,6 @@ func RenderList(results *github.UsersSearchResult) {
 		e := <-uiEvents
 		switch e.ID {
 		case "q", "<C-c>":
-			ui.Clear()
 			return
 		case "j", "<Down>":
 			l.ScrollDown()

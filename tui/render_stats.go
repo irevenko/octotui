@@ -13,8 +13,8 @@ const (
 )
 
 var (
-	ctx, client = r.AuthREST(token)
-	qlClient    = g.AuthGraphQL(token)
+	ctx, restClient = r.AuthREST(token)
+	qlClient        = g.AuthGraphQL(token)
 )
 
 func RenderStats(username string) {
@@ -24,17 +24,17 @@ func RenderStats(username string) {
 	defer ui.Close()
 
 	user := g.UserDetails(qlClient, username)
-
-	p := SetupProfileInfo(user)
-	p2 := SetupProfileStats(user)
-	p3 := SetupReposStats(user)
-	pc := SetupLangsByCommits(user)
-	pc2 := SetupLangsByRepo(user)
-	sl := SetupContribsSparkline(user)
-	bc := SetupStarsPerLangs(user)
-	bc2 := SetupForksPerLangs(user)
+	allRepos := r.AllRepos(ctx, restClient, username)
 
 	img, images := SetupImage(user.AvatarURL, user.Login)
+	p := SetupProfileInfo(user)
+	p2 := SetupProfileStats(user, allRepos)
+	p3 := SetupReposStats(user, allRepos)
+	pc := SetupLangsByCommits(user)
+	pc2 := SetupLangsByRepo(user, allRepos)
+	bc := SetupStarsPerLangs(user, allRepos)
+	bc2 := SetupForksPerLangs(user, allRepos)
+	sl := SetupContribsSparkline(user)
 
 	render := func() {
 		img.Image = images[0]

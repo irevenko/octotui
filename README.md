@@ -1,7 +1,9 @@
 # 🐙🐱🖥️ octotui - GitHub stats in terminal
-Data -  <a href="https://github.com/irevenko/octostats">octostats</a> 
-TUI - <a href="https://github.com/gizak/termui">termui</a> 
-Inspired by metrics, github-readme-stats
+> Inspired by <a href="https://github.com/lowlighter/metrics">metrics</a> & <a href="https://github.com/vn7n24fzkq/github-profile-summary-cards">github-profile-summary-cards</a> 💖
+<p align="center"> Data -  <a href="https://github.com/irevenko/octostats">irevenko/octostats</a> 
+TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
+<img src="preview.png">
+
 
 # TUI
 - [x] Users/Orgs search
@@ -11,15 +13,14 @@ Inspired by metrics, github-readme-stats
 - [x] Activity sparkline
 
 # ToDo
+- [ ] colors
 - [ ] refactoring
-- [ ] share one allRepos instance
-- [ ] get dynamic year
-- [ ] Fix octostats types (float64, DateTime)
-- [ ] Fix year span (get curr month in octostats)
 - [ ] Fix graphql pagination (first 100)
-- [ ] Rewrite everything to graphql (performance boost)
 - [ ] graceful exit ?termenv
 - [ ] orgzanization support
 - [ ] Input validation
 - [ ] token configuration
 - [ ] custom arguments
+- [ ] re-render component (render_stats profile info prev results)
+- [ ] loading progress bar while fetching profile stats
+- [ ] test with various gh profiles

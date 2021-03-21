@@ -9,10 +9,14 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strconv"
+	"time"
 
+	"github.com/google/go-github/github"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
 
+	gh "../github"
 	ui "github.com/gizak/termui"
 	"github.com/gizak/termui/widgets"
 )
@@ -20,30 +24,28 @@ import (
 func SetupProfileInfo(user g.User) *widgets.Paragraph {
 	p := widgets.NewParagraph()
 	p.WrapText = true
-	text := buildProfileInfo(user)
-	p.Text = text
+	p.Text = gh.BuildProfileInfo(user)
 	p.Border = true
 	p.SetRect(0, 35, 35, 14)
 
 	return p
 }
 
-func SetupProfileStats(user g.User) *widgets.Paragraph {
+func SetupProfileStats(user g.User, allRepos []*github.Repository) *widgets.Paragraph {
 	p := widgets.NewParagraph()
 	p.WrapText = true
-	text := buildProfileStats(user)
-	p.Text = text
+	p.Text = gh.BuildProfileStats(ctx, restClient, qlClient, user, allRepos)
 	p.Border = true
 	p.SetRect(35, 0, 70, 20)
 
 	return p
 }
 
-func SetupReposStats(user g.User) *widgets.Paragraph {
+func SetupReposStats(user g.User, allRepos []*github.Repository) *widgets.Paragraph {
 	p := widgets.NewParagraph()
 	p.WrapText = true
 	p.Border = true
-	p.Text = buildReposStats(user)
+	p.Text = gh.BuildReposStats(restClient, user, allRepos)
 	p.SetRect(70, 10, 105, 20)
 
 	return p
@@ -76,15 +78,10 @@ func SetupLangsByCommits(user g.User) *widgets.PieChart {
 	pc.Title = "Languages by commit"
 	pc.SetRect(35, 35, 70, 20)
 
-	langs, commits := g.LanguagesByCommit(qlClient, user.Login, 2020, 2021)
+	year, _, _ := time.Now().Date()
+	langs, commits := g.LanguagesByCommit(qlClient, user.Login, year-1, year)
 
-	var data []float64
-
-	for _, v := range commits {
-		data = append(data, float64(v))
-	}
-
-	pc.Data = data[:4]
+	pc.Data = commits[:4]
 	pc.AngleOffset = .15 * math.Pi
 	pc.LabelFormatter = func(i int, v float64) string {
 		return fmt.Sprintf("%.00f"+" %s", v, langs[i])
@@ -93,20 +90,13 @@ func SetupLangsByCommits(user g.User) *widgets.PieChart {
 	return pc
 }
 
-func SetupLangsByRepo(user g.User) *widgets.PieChart {
+func SetupLangsByRepo(user g.User, allRepos []*github.Repository) *widgets.PieChart {
+	usedLangs, langsNum := r.LanguagesByRepo(restClient, allRepos)
+
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by repo"
 	pc.SetRect(105, 35, 70, 20)
-
-	allRepos := r.AllRepos(ctx, client, user.Login)
-	var data []float64
-
-	usedLangs, langsNum := r.LanguagesByRepo(client, allRepos)
-	for _, v := range langsNum {
-		data = append(data, float64(v))
-	}
-
-	pc.Data = data[:4]
+	pc.Data = langsNum[:4]
 	pc.AngleOffset = .15 * math.Pi
 	pc.LabelFormatter = func(i int, v float64) string {
 		return fmt.Sprintf("%.00f"+" %s", v, usedLangs[i])
@@ -115,18 +105,11 @@ func SetupLangsByRepo(user g.User) *widgets.PieChart {
 	return pc
 }
 
-func SetupStarsPerLangs(user g.User) *widgets.BarChart {
-	var data []float64
-	allRepos := r.AllRepos(ctx, client, user.Login)
-
-	starsPerL, starsNum := r.StarsPerLanguage(client, allRepos)
-
-	for _, v := range starsNum {
-		data = append(data, float64(v))
-	}
+func SetupStarsPerLangs(user g.User, allRepos []*github.Repository) *widgets.BarChart {
+	starsPerL, starsNum := r.StarsPerLanguage(restClient, allRepos)
 
 	bc := widgets.NewBarChart()
-	bc.Data = data[:4]
+	bc.Data = starsNum[:4]
 	bc.Labels = starsPerL[:4]
 	bc.Title = "Stars per language"
 	bc.SetRect(150, 35, 105, 20)
@@ -140,18 +123,11 @@ func SetupStarsPerLangs(user g.User) *widgets.BarChart {
 	return bc
 }
 
-func SetupForksPerLangs(user g.User) *widgets.BarChart {
-	var data []float64
-	allRepos := r.AllRepos(ctx, client, user.Login)
-
-	forksPerL, forksNum := r.ForksPerLanguage(client, allRepos)
-
-	for _, v := range forksNum {
-		data = append(data, float64(v))
-	}
+func SetupForksPerLangs(user g.User, allRepos []*github.Repository) *widgets.BarChart {
+	forksPerL, forksNum := r.ForksPerLanguage(restClient, allRepos)
 
 	bc := widgets.NewBarChart()
-	bc.Data = data[:4]
+	bc.Data = forksNum[:4]
 	bc.Labels = forksPerL[:4]
 	bc.Title = "Forks per language"
 	bc.SetRect(150, 10, 105, 20)
@@ -167,14 +143,16 @@ func SetupForksPerLangs(user g.User) *widgets.BarChart {
 
 func SetupContribsSparkline(user g.User) *widgets.SparklineGroup {
 	_, contribs := g.YearActivity(qlClient, user.Login)
+	timeSpan := 75
 
 	sl := widgets.NewSparkline()
-	sl.Data = contribs[len(contribs)-75 : len(contribs)]
+	sl.Data = contribs[len(contribs)-timeSpan : len(contribs)]
 	sl.TitleStyle.Fg = ui.ColorWhite
 	sl.LineColor = ui.ColorCyan
 
 	slg := widgets.NewSparklineGroup(sl)
-	slg.Title = "Activity for the last 75 days"
+	slg.Title = "Activity for the last " + strconv.Itoa(timeSpan) + " days"
 	slg.SetRect(150, 0, 70, 10)
+
 	return slg
 }
