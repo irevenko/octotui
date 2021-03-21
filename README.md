@@ -10,16 +10,15 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 - [x] Most starred, forked repos
 - [x] Languages, by repo, commits, stars, forks
 - [x] Activity sparkline
+- [x] Search input
+- [x] Spinner after fetching stars
 - [ ] Other colors
-- [ ] Loading progress bar while fetching stats
 
 # ToDo
-- [ ] graceful exit ?termenv
+- [ ] command to replace input component (cobra) (or maybe create branch with input)
 - [ ] orgzanization support
 - [ ] Input validation
 - [ ] token configuration
-- [ ] custom arguments
-- [ ] re-render component (render_stats profile info prev results)
-rofile stats
 - [ ] test with various gh profiles
-- [ ] test on windows
+- [ ] fix octostats go.mod file
+- [ ] update preview, add docs

@@ -2,7 +2,9 @@ package tui
 
 import (
 	"log"
+	"os"
 
+	"github.com/briandowns/spinner"
 	ui "github.com/gizak/termui"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
@@ -17,7 +19,7 @@ var (
 	qlClient        = g.AuthGraphQL(token)
 )
 
-func RenderStats(username string) {
+func RenderStats(username string, s *spinner.Spinner) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
@@ -41,14 +43,17 @@ func RenderStats(username string) {
 		ui.Render(img, p, p2, pc, pc2, sl, bc, bc2, p3)
 	}
 	render()
+	s.Stop()
 
 	uiEvents := ui.PollEvents()
 	for {
 		e := <-uiEvents
 		switch e.ID {
-		case "q", "<C-c>":
+		case "<C-c>":
 			ui.Clear()
-			RenderInput()
+			ui.Close()
+			os.Exit(1)
+			return
 		case "<Enter>":
 			img.Monochrome = !img.Monochrome
 		case "<Tab>":

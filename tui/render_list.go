@@ -2,8 +2,11 @@ package tui
 
 import (
 	"log"
+	"os"
 	"strings"
+	"time"
 
+	"github.com/briandowns/spinner"
 	ui "github.com/gizak/termui"
 	"github.com/gizak/termui/widgets"
 	"github.com/google/go-github/github"
@@ -35,7 +38,10 @@ func RenderList(results *github.UsersSearchResult) {
 	for {
 		e := <-uiEvents
 		switch e.ID {
-		case "q", "<C-c>":
+		case "<C-c>":
+			ui.Clear()
+			ui.Close()
+			os.Exit(1)
 			return
 		case "j", "<Down>":
 			l.ScrollDown()
@@ -44,7 +50,13 @@ func RenderList(results *github.UsersSearchResult) {
 		case "e", "<Enter>":
 			user := strings.Split(l.Rows[l.SelectedRow], " ")
 			ui.Clear()
-			RenderStats(user[0])
+			ui.Close()
+
+			s := spinner.New(spinner.CharSets[30], 100*time.Millisecond)
+			s.Prefix = "fetching github data "
+			s.Start()
+
+			RenderStats(user[0], s)
 		}
 
 		ui.Render(l)
