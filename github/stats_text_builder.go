@@ -63,22 +63,23 @@ func BuildProfileInfo(user g.User) string {
 func BuildProfileStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, user g.User, allRepos []*github.Repository) string {
 	var baseStats string
 
-	s, f, c, i, p := FetchStats(ctx, restClient, qlClient, user.Login, allRepos)
+	s, f, c, i, p, rp := FetchStats(ctx, restClient, qlClient, user.Login, allRepos)
 	usedLicenses, _ := r.MostUsedLicenses(restClient, allRepos)
 
 	baseStats = "Profile Statistics" + "\n" +
+		"[Total repos:](fg:magenta) " + strconv.Itoa(user.Repositories.TotalCount) + "\n" +
+		"[Total gists:](fg:magenta) " + strconv.Itoa(user.Gists.TotalCount) + "\n" +
 		"[Total stars:](fg:magenta) " + strconv.Itoa(s) + "\n" +
 		"[Total forks:](fg:magenta) " + strconv.Itoa(f) + "\n" +
 		"[Total commits (last year):](fg:magenta) " + strconv.Itoa(c) + "\n" +
-		"[Total issues (last year):](fg:magenta) " + strconv.Itoa(i) + "\n" +
-		"[Total PRs (last year):](fg:magenta) " + strconv.Itoa(p) + "\n" +
-		"[Total repos:](fg:magenta) " + strconv.Itoa(user.Repositories.TotalCount) + "\n" +
-		"[Total gists:](fg:magenta) " + strconv.Itoa(user.Gists.TotalCount) + "\n" +
+		"[Opened issues (last year):](fg:magenta) " + strconv.Itoa(i) + "\n" +
+		"[Opened PRs (last year):](fg:magenta) " + strconv.Itoa(p) + "\n" +
+		"[Reviewed PRs (last year):](fg:magenta) " + strconv.Itoa(rp) + "\n" +
 		"[Total packages:](fg:magenta) " + strconv.Itoa(user.Packages.TotalCount) + "\n" +
 		"[Total projects:](fg:magenta) " + strconv.Itoa(user.Projects.TotalCount) + "\n" +
-		"[Organizations:](fg:magenta) " + strconv.Itoa(len(user.Organizations.Nodes)) + "\n" +
-		"[Sponsors:](fg:magenta) " + strconv.Itoa(len(user.SponsorshipsAsMaintainer.Nodes)) + "\n" +
-		"[Sponsoring:](fg:magenta) " + strconv.Itoa(len(user.SponsorshipsAsSponsor.Nodes)) + "\n" +
+		"[Organizations:](fg:magenta) " + strconv.Itoa(user.Organizations.TotalCount) + "\n" +
+		"[Sponsors:](fg:magenta) " + strconv.Itoa(user.SponsorshipsAsMaintainer.TotalCount) + "\n" +
+		"[Sponsoring:](fg:magenta) " + strconv.Itoa(user.SponsorshipsAsSponsor.TotalCount) + " people \n" +
 		"[Watching:](fg:magenta) " + strconv.Itoa(user.Watching.TotalCount) + " repos\n"
 
 	if len(usedLicenses) > 0 {

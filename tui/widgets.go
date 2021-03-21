@@ -24,8 +24,8 @@ import (
 func SetupProfileInfo(user g.User) *widgets.Paragraph {
 	p := widgets.NewParagraph()
 	p.WrapText = true
-	p.Text = gh.BuildProfileInfo(user)
 	p.Border = true
+	p.Text = gh.BuildProfileInfo(user)
 	p.SetRect(0, 35, 35, 14)
 
 	return p
@@ -74,14 +74,20 @@ func SetupImage(profileImg string, login string) (*widgets.Image, []image.Image)
 }
 
 func SetupLangsByCommits(user g.User) *widgets.PieChart {
+	year, _, _ := time.Now().Date()
+	langs, commits := g.LanguagesByCommit(qlClient, user.Login, year-1, year)
+
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by commit"
 	pc.SetRect(35, 35, 70, 20)
 
-	year, _, _ := time.Now().Date()
-	langs, commits := g.LanguagesByCommit(qlClient, user.Login, year-1, year)
+	boundNum := defineDataBound(langs)
+	if boundNum == 0 {
+		pc.Title = "Languages by commit (no commits)"
+	} else {
+		pc.Data = commits[:boundNum]
+	}
 
-	pc.Data = commits[:4]
 	pc.AngleOffset = .15 * math.Pi
 	pc.LabelFormatter = func(i int, v float64) string {
 		return fmt.Sprintf("%.00f"+" %s", v, langs[i])
@@ -96,7 +102,14 @@ func SetupLangsByRepo(user g.User, allRepos []*github.Repository) *widgets.PieCh
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by repo"
 	pc.SetRect(105, 35, 70, 20)
-	pc.Data = langsNum[:4]
+
+	boundNum := defineDataBound(usedLangs)
+	if boundNum == 0 {
+		pc.Title = "Languages by repo (no repos)"
+	} else {
+		pc.Data = langsNum[:boundNum]
+	}
+
 	pc.AngleOffset = .15 * math.Pi
 	pc.LabelFormatter = func(i int, v float64) string {
 		return fmt.Sprintf("%.00f"+" %s", v, usedLangs[i])
@@ -109,11 +122,17 @@ func SetupStarsPerLangs(user g.User, allRepos []*github.Repository) *widgets.Bar
 	starsPerL, starsNum := r.StarsPerLanguage(restClient, allRepos)
 
 	bc := widgets.NewBarChart()
-	bc.Data = starsNum[:4]
-	bc.Labels = starsPerL[:4]
 	bc.Title = "Stars per language"
 	bc.SetRect(150, 35, 105, 20)
-	bc.BarWidth = 5
+
+	boundNum := defineDataBound(starsPerL)
+	if boundNum == 0 {
+		bc.Title = "Stars per language (no languages)"
+	} else {
+		bc.Data = starsNum[:boundNum]
+		bc.Labels = starsPerL[:boundNum]
+	}
+
 	bc.BarColors = []ui.Color{ui.ColorMagenta, ui.ColorGreen, ui.ColorYellow, ui.ColorBlue}
 	bc.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorCyan)}
 	bc.NumStyles = []ui.Style{ui.NewStyle(ui.ColorWhite)}
@@ -127,11 +146,17 @@ func SetupForksPerLangs(user g.User, allRepos []*github.Repository) *widgets.Bar
 	forksPerL, forksNum := r.ForksPerLanguage(restClient, allRepos)
 
 	bc := widgets.NewBarChart()
-	bc.Data = forksNum[:4]
-	bc.Labels = forksPerL[:4]
 	bc.Title = "Forks per language"
 	bc.SetRect(150, 10, 105, 20)
-	bc.BarWidth = 5
+
+	boundNum := defineDataBound(forksPerL)
+	if boundNum == 0 {
+		bc.Title = "Forks per language (no languages)"
+	} else {
+		bc.Data = forksNum[:boundNum]
+		bc.Labels = forksPerL[:boundNum]
+	}
+
 	bc.BarColors = []ui.Color{ui.ColorMagenta, ui.ColorGreen, ui.ColorYellow, ui.ColorBlue}
 	bc.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorCyan)}
 	bc.NumStyles = []ui.Style{ui.NewStyle(ui.ColorWhite)}
@@ -155,4 +180,22 @@ func SetupContribsSparkline(user g.User) *widgets.SparklineGroup {
 	slg.SetRect(150, 0, 70, 10)
 
 	return slg
+}
+
+func defineDataBound(slice []string) int {
+	if len(slice) > 4 { // 4 is max amount of entries for pie/bar chart
+		return 4
+	} else if len(slice) < 1 {
+		return 0
+	} else if len(slice) < 2 {
+		return 1
+	} else if len(slice) < 3 {
+		return 2
+	} else if len(slice) < 4 {
+		return 3
+	} else if len(slice) < 5 {
+		return 4
+	}
+
+	return 0
 }

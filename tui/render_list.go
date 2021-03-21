@@ -16,7 +16,6 @@ func RenderList(results *github.UsersSearchResult) {
 	defer ui.Close()
 
 	var rowsData []string
-
 	for _, v := range results.Users {
 		login := *v.Login
 		accountType := *v.Type
@@ -24,10 +23,9 @@ func RenderList(results *github.UsersSearchResult) {
 	}
 
 	l := widgets.NewList()
-
 	l.Title = "Search Results"
 	l.Rows = rowsData
-	l.TextStyle = ui.NewStyle(ui.ColorRed)
+	l.TextStyle = ui.NewStyle(ui.ColorBlue)
 	l.WrapText = true
 	l.SetRect(0, 7, 100, 30)
 

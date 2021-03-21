@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	token = ""
+	token = "fb71a5aa6f42d225f4210fb6b20bdebb81ce7cf5"
 )
 
 var (
