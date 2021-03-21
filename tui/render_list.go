@@ -54,6 +54,7 @@ func RenderList(results *github.UsersSearchResult) {
 
 			s := spinner.New(spinner.CharSets[30], 100*time.Millisecond)
 			s.Prefix = "fetching github data "
+			s.FinalMSG = "done"
 			s.Start()
 
 			RenderStats(user[0], s)

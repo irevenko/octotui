@@ -42,8 +42,8 @@ func RenderStats(username string, s *spinner.Spinner) {
 		img.Image = images[0]
 		ui.Render(img, p, p2, pc, pc2, sl, bc, bc2, p3)
 	}
-	render()
 	s.Stop()
+	render()
 
 	uiEvents := ui.PollEvents()
 	for {

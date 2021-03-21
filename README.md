@@ -5,20 +5,18 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 <img src="preview.png">
 
 # TUI
-- [x] Users/Orgs search
 - [x] Profile Image & user basic info/stats
 - [x] Most starred, forked repos
 - [x] Languages, by repo, commits, stars, forks
 - [x] Activity sparkline
-- [x] Search input
-- [x] Spinner after fetching stars
-- [ ] Other colors
+- [x] Search input (experimental)
+- [x] Spinner (while fetching stats)
+- [ ] Reconsider colors
+- [ ] Tabs with another data like [metrics plugins](https://github.com/lowlighter/metrics#-metrics-)
 
 # ToDo
-- [ ] command to replace input component (cobra) (or maybe create branch with input)
 - [ ] orgzanization support
-- [ ] Input validation
+- [ ] command to replace input component (cobra) (create branch with input-widget)
 - [ ] token configuration
-- [ ] test with various gh profiles
 - [ ] fix octostats go.mod file
-- [ ] update preview, add docs
+- [ ] docs
