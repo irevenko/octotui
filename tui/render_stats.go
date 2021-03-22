@@ -43,9 +43,9 @@ func renderUser(username string, s *spinner.Spinner) {
 	p2 := SetupProfileStats(user, allRepos)
 	p3 := SetupReposStats(user, allRepos)
 	pc := SetupLangsByCommits(user)
-	pc2 := SetupLangsByRepo(user, allRepos)
-	bc := SetupStarsPerLangs(user, allRepos)
-	bc2 := SetupForksPerLangs(user, allRepos)
+	pc2 := SetupLangsByRepo(allRepos, "user")
+	bc := SetupStarsPerLangs(allRepos, "user")
+	bc2 := SetupForksPerLangs(allRepos, "user")
 	sl := SetupContribsSparkline(user)
 
 	render := func() {
@@ -80,10 +80,14 @@ func renderOrganization(username string, s *spinner.Spinner) {
 	img, images := SetupImage(org.AvatarURL, org.Login)
 	p := SetupOrgInfo(org)
 	p2 := SetupOrgStats(org, allRepos)
+	p3 := SetupOrgRepos(org, allRepos)
+	bc := SetupStarsPerLangs(allRepos, "organization")
+	bc2 := SetupForksPerLangs(allRepos, "organization")
+	pc2 := SetupLangsByRepo(allRepos, "organization")
 
 	render := func() {
 		img.Image = images[0]
-		ui.Render(img, p, p2)
+		ui.Render(img, p, p2, p3, bc, bc2, pc2)
 	}
 	s.Stop()
 	render()
