@@ -8,7 +8,8 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 ```go get -u github.com/irevenko/octotui``` <br>
 ## Token
 To generate token go here: https://github.com/settings/tokens <br>
-Press ```Generate new token``` and select ```repo, admin:org, user```
+Press ```Generate new token``` and select ```repo, admin:org, user``` <br>
+Put this token into ```HOMEDIR/.config/octotui/token```
 
 # Usage 🔬
 ```octotui search <USER_OR_ORGANIZATION>``` <br> 
@@ -20,7 +21,6 @@ Press ```Enter``` to invert image to monochrome color and then ```Tab``` to mono
 - [x] Most starred, forked repos
 - [x] Languages, by repo, commits, stars, forks
 - [x] Activity sparkline
-- [x] Search input (experimental)
 - [x] Spinner (while fetching stats)
 - [ ] Reconsider colors
 - [ ] Tabs with another data like [metrics plugins](https://github.com/lowlighter/metrics#-metrics-)
