@@ -1,11 +1,17 @@
 package main
 
 import (
-	gh "./github"
-	tui "./tui"
+	"fmt"
+	"os"
+
+	cmd "github.com/irevenko/octotui/cmd"
 )
 
 func main() {
-	results := gh.SearchUser(tui.Ctx, tui.RestClient, "irevenko")
-	tui.RenderList(results)
+	cmd.AddCommands()
+
+	if err := cmd.RootCmd.Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }

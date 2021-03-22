@@ -8,10 +8,9 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 ```go get -u github.com/irevenko/octotui``` <br>
 
 # Usage 🔬
-```octotui <USER_OR_ORGANIZATION>``` <br>
+```octotui search <USER_OR_ORGANIZATION>``` <br> 
 Press ```Enter``` to invert image to monochrome color and then ```Tab``` to monochrome invert <br>
-<GIF_CHANGING_AVATAR>
-
+<img src="avatar.gif" width="250">
 # TUI
 - [x] Profile Image & user basic info/stats
 - [x] Most starred, forked repos
@@ -21,12 +20,6 @@ Press ```Enter``` to invert image to monochrome color and then ```Tab``` to mono
 - [x] Spinner (while fetching stats)
 - [ ] Reconsider colors
 - [ ] Tabs with another data like [metrics plugins](https://github.com/lowlighter/metrics#-metrics-)
-
-# ToDo
-- [ ] command to replace input component (cobra)
-- [ ] token config
-- [ ] fix octostats go.mod file
-- [ ] docs
 
 # Contributing 🤝
 Contributions, issues and feature requests are welcome! 👍 <br>

@@ -12,14 +12,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v33/github"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
 
-	gh "../github"
-	h "../helpers"
-	ui "github.com/gizak/termui"
-	"github.com/gizak/termui/widgets"
+	ui "github.com/gizak/termui/v3"
+	"github.com/gizak/termui/v3/widgets"
+	gh "github.com/irevenko/octotui/github"
+	h "github.com/irevenko/octotui/helpers"
 )
 
 func SetupProfileInfo(user g.User) *widgets.Paragraph {

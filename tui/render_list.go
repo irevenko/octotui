@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	ui "github.com/gizak/termui"
-	"github.com/gizak/termui/widgets"
-	"github.com/google/go-github/github"
+	ui "github.com/gizak/termui/v3"
+	"github.com/gizak/termui/v3/widgets"
+	"github.com/google/go-github/v33/github"
 )
 
 func RenderList(results *github.UsersSearchResult) {

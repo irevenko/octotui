@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 
-	h "../helpers"
 	"github.com/briandowns/spinner"
-	ui "github.com/gizak/termui"
+	ui "github.com/gizak/termui/v3"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
+	h "github.com/irevenko/octotui/helpers"
 )
 
 var (

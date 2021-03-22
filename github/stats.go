@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v33/github"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
 	"github.com/shurcooL/githubv4"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v33/github"
 )
 
 func SearchUser(ctx context.Context, restClient *github.Client, username string) *github.UsersSearchResult {
