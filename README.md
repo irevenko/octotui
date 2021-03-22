@@ -6,11 +6,15 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 
 # Installation 🔨
 ```go get -u github.com/irevenko/octotui``` <br>
+## Token
+To generate token go here: https://github.com/settings/tokens <br>
+Press ```Generate new token``` and select ```repo, admin:org, user```
 
 # Usage 🔬
 ```octotui search <USER_OR_ORGANIZATION>``` <br> 
 Press ```Enter``` to invert image to monochrome color and then ```Tab``` to monochrome invert <br>
 <img src="avatar.gif" width="250">
+
 # TUI
 - [x] Profile Image & user basic info/stats
 - [x] Most starred, forked repos
