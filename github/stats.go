@@ -10,7 +10,7 @@ import (
 	"github.com/shurcooL/githubv4"
 )
 
-func FetchStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string, allRepos []*github.Repository) (int, int, int, int, int, int) {
+func FetchUserStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string, allRepos []*github.Repository) (int, int, int, int, int, int) {
 	totalStars := r.TotalStars(restClient, allRepos)
 	totalForks := r.TotalForks(restClient, allRepos)
 
@@ -39,4 +39,11 @@ func FetchStats(ctx context.Context, restClient *github.Client, qlClient *github
 	}
 
 	return totalStars, totalForks, totalCommits, totalIssues, totalPrs, totalReviews
+}
+
+func FetchOrgStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, username string, allRepos []*github.Repository) (int, int) {
+	totalStars := r.TotalStars(restClient, allRepos)
+	totalForks := r.TotalForks(restClient, allRepos)
+
+	return totalStars, totalForks
 }

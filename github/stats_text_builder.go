@@ -63,7 +63,7 @@ func BuildProfileInfo(user g.User) string {
 func BuildProfileStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, user g.User, allRepos []*github.Repository) string {
 	var baseStats string
 
-	s, f, c, i, p, rp := FetchStats(ctx, restClient, qlClient, user.Login, allRepos)
+	s, f, c, i, p, rp := FetchUserStats(ctx, restClient, qlClient, user.Login, allRepos)
 	usedLicenses, _ := r.MostUsedLicenses(restClient, allRepos)
 
 	baseStats = "Profile Statistics" + "\n" +
@@ -81,6 +81,63 @@ func BuildProfileStats(ctx context.Context, restClient *github.Client, qlClient 
 		"[Sponsors:](fg:magenta) " + strconv.Itoa(user.SponsorshipsAsMaintainer.TotalCount) + "\n" +
 		"[Sponsoring:](fg:magenta) " + strconv.Itoa(user.SponsorshipsAsSponsor.TotalCount) + " people \n" +
 		"[Watching:](fg:magenta) " + strconv.Itoa(user.Watching.TotalCount) + " repos\n"
+
+	if len(usedLicenses) > 0 {
+		baseStats += "[Favorite licenses:](fg:magenta) " + usedLicenses[0]
+	}
+
+	return baseStats
+}
+
+func BuildOrganizationInfo(org g.Organization) string {
+	var baseOrg string
+	joinedAt := strings.Split(org.CreatedAt.String(), " ")
+
+	if org.Name == "" {
+		baseOrg = org.Login + "\n" +
+			"[People:](fg:yellow) " + strconv.Itoa(org.MembersWithRole.TotalCount) + "\n" +
+			"[Joined:](fg:yellow) " + joinedAt[0] + "\n"
+	} else {
+		baseOrg = org.Name + "\n" +
+			"[People:](fg:yellow) " + strconv.Itoa(org.MembersWithRole.TotalCount) + "\n" +
+			"[Joined:](fg:yellow) " + joinedAt[0] + "\n"
+	}
+
+	if org.Description != "" {
+		baseOrg += "[Description:](fg:yellow) " + org.Description + "\n"
+	}
+
+	if org.Email != "" {
+		baseOrg += "[Email:](fg:yellow) " + org.Email + "\n"
+	}
+
+	if org.Location != "" {
+		baseOrg += "[Location:](fg:yellow) " + org.Location + "\n"
+	}
+
+	if org.TwitterUsername != "" {
+		baseOrg += "[Twitter:](fg:yellow) @" + org.TwitterUsername + "\n"
+	}
+
+	if org.WebsiteURL != "" {
+		baseOrg += "[Site:](fg:yellow) " + org.WebsiteURL + "\n"
+	}
+
+	return baseOrg
+}
+
+func BuildOrgStats(ctx context.Context, restClient *github.Client, qlClient *githubv4.Client, org g.Organization, allRepos []*github.Repository) string {
+	var baseStats string
+
+	s, f := FetchOrgStats(ctx, restClient, qlClient, org.Login, allRepos)
+	usedLicenses, _ := r.MostUsedLicenses(restClient, allRepos)
+
+	baseStats = "Profile Statistics" + "\n" +
+		"[Total repos:](fg:magenta) " + strconv.Itoa(org.Repositories.TotalCount) + "\n" +
+		"[Total stars:](fg:magenta) " + strconv.Itoa(s) + "\n" +
+		"[Total forks:](fg:magenta) " + strconv.Itoa(f) + "\n" +
+		"[Total packages:](fg:magenta) " + strconv.Itoa(org.Packages.TotalCount) + "\n" +
+		"[Total projects:](fg:magenta) " + strconv.Itoa(org.Projects.TotalCount) + "\n"
 
 	if len(usedLicenses) > 0 {
 		baseStats += "[Favorite licenses:](fg:magenta) " + usedLicenses[0]

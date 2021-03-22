@@ -19,12 +19,22 @@ var (
 	qlClient        = g.AuthGraphQL(token)
 )
 
-func RenderStats(username string, s *spinner.Spinner) {
+func RenderStats(username string, accType string, s *spinner.Spinner) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
 	defer ui.Close()
 
+	if accType == "(user)" {
+		renderUser(username, s)
+	}
+
+	if accType == "(organization)" {
+		renderOrganization(username, s)
+	}
+}
+
+func renderUser(username string, s *spinner.Spinner) {
 	user := g.UserDetails(qlClient, username)
 	allRepos := r.AllRepos(ctx, restClient, username)
 
@@ -41,6 +51,39 @@ func RenderStats(username string, s *spinner.Spinner) {
 	render := func() {
 		img.Image = images[0]
 		ui.Render(img, p, p2, pc, pc2, sl, bc, bc2, p3)
+	}
+	s.Stop()
+	render()
+
+	uiEvents := ui.PollEvents()
+	for {
+		e := <-uiEvents
+		switch e.ID {
+		case "<C-c>":
+			ui.Clear()
+			ui.Close()
+			os.Exit(1)
+			return
+		case "<Enter>":
+			img.Monochrome = !img.Monochrome
+		case "<Tab>":
+			img.MonochromeInvert = !img.MonochromeInvert
+		}
+		render()
+	}
+}
+
+func renderOrganization(username string, s *spinner.Spinner) {
+	org := g.OrganizationDetails(qlClient, username)
+	allRepos := r.AllRepos(ctx, restClient, username)
+
+	img, images := SetupImage(org.AvatarURL, org.Login)
+	p := SetupOrgInfo(org)
+	p2 := SetupOrgStats(org, allRepos)
+
+	render := func() {
+		img.Image = images[0]
+		ui.Render(img, p, p2)
 	}
 	s.Stop()
 	render()

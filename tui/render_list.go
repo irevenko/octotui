@@ -57,7 +57,7 @@ func RenderList(results *github.UsersSearchResult) {
 			s.FinalMSG = "done"
 			s.Start()
 
-			RenderStats(user[0], s)
+			RenderStats(user[0], user[1], s)
 		}
 
 		ui.Render(l)
