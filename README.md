@@ -9,7 +9,7 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 
 # Usage 🔬
 ```octotui <USER_OR_ORGANIZATION>``` <br>
-press ```Enter``` to invert image to monochrome color and then ```Tab``` to monochrome invert <br>
+Press ```Enter``` to invert image to monochrome color and then ```Tab``` to monochrome invert <br>
 <GIF_CHANGING_AVATAR>
 
 # TUI
@@ -23,7 +23,6 @@ press ```Enter``` to invert image to monochrome color and then ```Tab``` to mono
 - [ ] Tabs with another data like [metrics plugins](https://github.com/lowlighter/metrics#-metrics-)
 
 # ToDo
-- [ ] orgzanization support (sponsors, prs, issues)
 - [ ] command to replace input component (cobra)
 - [ ] token config
 - [ ] fix octostats go.mod file
@@ -40,6 +39,7 @@ Feel free to check [open issues](https://github.com/irevenko/octotui/issues).
 ```go build``` <br>
 
 # What I Learned 🧠
+- Advanced termui
 
 # License 📑 
 (c) 2021 Ilya Revenko. [MIT License](https://tldrlegal.com/license/mit-license)

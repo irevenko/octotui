@@ -49,6 +49,9 @@ func RenderList(results *github.UsersSearchResult) {
 			l.ScrollUp()
 		case "e", "<Enter>":
 			user := strings.Split(l.Rows[l.SelectedRow], " ")
+			username := user[0]
+			accType := user[1]
+
 			ui.Clear()
 			ui.Close()
 
@@ -57,7 +60,7 @@ func RenderList(results *github.UsersSearchResult) {
 			s.FinalMSG = "done"
 			s.Start()
 
-			RenderStats(user[0], user[1], s)
+			RenderStats(username, accType, s)
 		}
 
 		ui.Render(l)

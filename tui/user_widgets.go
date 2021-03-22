@@ -110,7 +110,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 
 		boundNum := userDataBound(usedLangs)
 		if boundNum == 0 {
-			pc.Title = "Stars per language (no languages)"
+			pc.Title = "Langs by repo (no repos)"
 		} else {
 			pc.Data = langsNum[:boundNum]
 		}
@@ -121,7 +121,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 
 		boundNum := orgDataBound(usedLangs)
 		if boundNum == 0 {
-			pc.Title = "Stars per language (no languages)"
+			pc.Title = "Langs by repo (no repos)"
 		} else {
 			pc.Data = langsNum[:boundNum]
 		}
@@ -147,24 +147,27 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "user" {
 		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
 
-		boundNum := userDataBound(starsPerL)
-		if boundNum == 0 {
-			bc.Title = "Stars per language (no languages)"
+		bound := userDataBound(starsPerL)
+
+		if bound == 0 || allZero(starsNum[:bound]) {
+			bc.Title = "Stars per language (no stars)"
 		} else {
-			bc.Data = starsNum[:boundNum]
-			bc.Labels = starsPerL[:boundNum]
+			// check here if array is full of zeros
+			bc.Data = starsNum[:bound]
+			bc.Labels = starsPerL[:bound]
 		}
 	}
 
 	if accType == "organization" {
 		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
 
-		boundNum := orgDataBound(starsPerL)
-		if boundNum == 0 {
-			bc.Title = "Stars per language (no languages)"
+		bound := orgDataBound(starsPerL)
+		if bound == 0 || allZero(starsNum[:bound]) {
+			bc.Title = "Stars per language (no stars)"
 		} else {
-			bc.Data = starsNum[:boundNum]
-			bc.Labels = starsPerL[:boundNum]
+			// check here if array is full of zeros
+			bc.Data = starsNum[:bound]
+			bc.Labels = starsPerL[:bound]
 		}
 	}
 
@@ -189,24 +192,26 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "user" {
 		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
 
-		boundNum := userDataBound(forksPerL)
-		if boundNum == 0 {
-			bc.Title = "Stars per language (no languages)"
+		bound := userDataBound(forksPerL)
+		if bound == 0 || allZero(forksNum[:bound]) {
+			bc.Title = "Forks per language (no forks)"
 		} else {
-			bc.Data = forksNum[:boundNum]
-			bc.Labels = forksPerL[:boundNum]
+			// check here if array is full of zeros
+			bc.Data = forksNum[:bound]
+			bc.Labels = forksPerL[:bound]
 		}
 	}
 
 	if accType == "organization" {
 		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
 
-		boundNum := orgDataBound(forksPerL)
-		if boundNum == 0 {
-			bc.Title = "Stars per language (no languages)"
+		bound := orgDataBound(forksPerL)
+		if bound == 0 || allZero(forksNum[:bound]) {
+			bc.Title = "Forks per language (no forks)"
 		} else {
-			bc.Data = forksNum[:boundNum]
-			bc.Labels = forksPerL[:boundNum]
+			// check here if array is full of zeros
+			bc.Data = forksNum[:bound]
+			bc.Labels = forksPerL[:bound]
 		}
 	}
 
@@ -275,4 +280,13 @@ func orgDataBound(slice []string) int {
 	}
 
 	return 0
+}
+
+func allZero(s []float64) bool {
+	for _, v := range s {
+		if v != 0 {
+			return false
+		}
+	}
+	return true
 }
