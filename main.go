@@ -1,9 +1,11 @@
 package main
 
 import (
+	gh "./github"
 	tui "./tui"
 )
 
 func main() {
-	tui.RenderInput()
+	results := gh.SearchUser(tui.Ctx, tui.RestClient, "irevenko")
+	tui.RenderList(results)
 }

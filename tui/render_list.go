@@ -30,7 +30,7 @@ func RenderList(results *github.UsersSearchResult) {
 	l.Rows = rowsData
 	l.TextStyle = ui.NewStyle(ui.ColorBlue)
 	l.WrapText = true
-	l.SetRect(0, 7, 100, 30)
+	l.SetRect(0, 0, 100, 30)
 
 	ui.Render(l)
 

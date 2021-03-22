@@ -17,6 +17,7 @@ import (
 	r "github.com/irevenko/octostats/rest"
 
 	gh "../github"
+	h "../helpers"
 	ui "github.com/gizak/termui"
 	"github.com/gizak/termui/widgets"
 )
@@ -34,7 +35,7 @@ func SetupProfileInfo(user g.User) *widgets.Paragraph {
 func SetupProfileStats(user g.User, allRepos []*github.Repository) *widgets.Paragraph {
 	p := widgets.NewParagraph()
 	p.WrapText = true
-	p.Text = gh.BuildUserStats(ctx, restClient, qlClient, user, allRepos)
+	p.Text = gh.BuildUserStats(Ctx, RestClient, qlClient, user, allRepos)
 	p.Border = true
 	p.SetRect(35, 0, 70, 20)
 
@@ -45,8 +46,38 @@ func SetupReposStats(user g.User, allRepos []*github.Repository) *widgets.Paragr
 	p := widgets.NewParagraph()
 	p.WrapText = true
 	p.Border = true
-	p.Text = gh.BuildUserRepos(restClient, user, allRepos)
+	p.Text = gh.BuildUserRepos(RestClient, user, allRepos)
 	p.SetRect(70, 10, 105, 20)
+
+	return p
+}
+
+func SetupOrgInfo(org g.Organization) *widgets.Paragraph {
+	p := widgets.NewParagraph()
+	p.WrapText = true
+	p.Border = true
+	p.Text = gh.BuildOrgInfo(org)
+	p.SetRect(0, 35, 35, 14)
+
+	return p
+}
+
+func SetupOrgStats(org g.Organization, allRepos []*github.Repository) *widgets.Paragraph {
+	p := widgets.NewParagraph()
+	p.WrapText = true
+	p.Text = gh.BuildOrgStats(Ctx, RestClient, qlClient, org, allRepos)
+	p.Border = true
+	p.SetRect(35, 0, 70, 12)
+
+	return p
+}
+
+func SetupOrgRepos(org g.Organization, allRepos []*github.Repository) *widgets.Paragraph {
+	p := widgets.NewParagraph()
+	p.WrapText = true
+	p.Border = true
+	p.Text = gh.BuildOrgRepos(RestClient, allRepos)
+	p.SetRect(35, 12, 70, 35)
 
 	return p
 }
@@ -81,7 +112,7 @@ func SetupLangsByCommits(user g.User) *widgets.PieChart {
 	pc.Title = "Languages by commit"
 	pc.SetRect(35, 35, 70, 20)
 
-	boundNum := userDataBound(langs)
+	boundNum := h.UserDataBound(langs)
 	if boundNum == 0 {
 		pc.Title = "Languages by commit (no commits)"
 	} else {
@@ -97,7 +128,7 @@ func SetupLangsByCommits(user g.User) *widgets.PieChart {
 }
 
 func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.PieChart {
-	usedLangs, langsNum := r.LanguagesByRepo(restClient, allRepos)
+	usedLangs, langsNum := r.LanguagesByRepo(RestClient, allRepos)
 
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by repo"
@@ -108,7 +139,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 	if accType == "user" {
 		pc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
 
-		boundNum := userDataBound(usedLangs)
+		boundNum := h.UserDataBound(usedLangs)
 		if boundNum == 0 {
 			pc.Title = "Langs by repo (no repos)"
 		} else {
@@ -119,7 +150,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 	if accType == "organization" {
 		pc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
 
-		boundNum := orgDataBound(usedLangs)
+		boundNum := h.OrgDataBound(usedLangs)
 		if boundNum == 0 {
 			pc.Title = "Langs by repo (no repos)"
 		} else {
@@ -136,7 +167,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 }
 
 func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.BarChart {
-	starsPerL, starsNum := r.StarsPerLanguage(restClient, allRepos)
+	starsPerL, starsNum := r.StarsPerLanguage(RestClient, allRepos)
 
 	bc := widgets.NewBarChart()
 	bc.Title = "Stars per language"
@@ -147,12 +178,10 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "user" {
 		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
 
-		bound := userDataBound(starsPerL)
-
-		if bound == 0 || allZero(starsNum[:bound]) {
+		bound := h.UserDataBound(starsPerL)
+		if bound == 0 || h.AllZero(starsNum[:bound]) {
 			bc.Title = "Stars per language (no stars)"
 		} else {
-			// check here if array is full of zeros
 			bc.Data = starsNum[:bound]
 			bc.Labels = starsPerL[:bound]
 		}
@@ -161,11 +190,10 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "organization" {
 		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
 
-		bound := orgDataBound(starsPerL)
-		if bound == 0 || allZero(starsNum[:bound]) {
+		bound := h.OrgDataBound(starsPerL)
+		if bound == 0 || h.AllZero(starsNum[:bound]) {
 			bc.Title = "Stars per language (no stars)"
 		} else {
-			// check here if array is full of zeros
 			bc.Data = starsNum[:bound]
 			bc.Labels = starsPerL[:bound]
 		}
@@ -181,7 +209,7 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 }
 
 func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.BarChart {
-	forksPerL, forksNum := r.ForksPerLanguage(restClient, allRepos)
+	forksPerL, forksNum := r.ForksPerLanguage(RestClient, allRepos)
 
 	bc := widgets.NewBarChart()
 	bc.Title = "Forks per language"
@@ -192,11 +220,10 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "user" {
 		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
 
-		bound := userDataBound(forksPerL)
-		if bound == 0 || allZero(forksNum[:bound]) {
+		bound := h.UserDataBound(forksPerL)
+		if bound == 0 || h.AllZero(forksNum[:bound]) {
 			bc.Title = "Forks per language (no forks)"
 		} else {
-			// check here if array is full of zeros
 			bc.Data = forksNum[:bound]
 			bc.Labels = forksPerL[:bound]
 		}
@@ -205,11 +232,10 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	if accType == "organization" {
 		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
 
-		bound := orgDataBound(forksPerL)
-		if bound == 0 || allZero(forksNum[:bound]) {
+		bound := h.OrgDataBound(forksPerL)
+		if bound == 0 || h.AllZero(forksNum[:bound]) {
 			bc.Title = "Forks per language (no forks)"
 		} else {
-			// check here if array is full of zeros
 			bc.Data = forksNum[:bound]
 			bc.Labels = forksPerL[:bound]
 		}
@@ -238,55 +264,4 @@ func SetupContribsSparkline(user g.User) *widgets.SparklineGroup {
 	slg.SetRect(150, 0, 70, 10)
 
 	return slg
-}
-
-func userDataBound(slice []string) int {
-	if len(slice) > 4 { // 4 is max amount of entries for pie/bar chart
-		return 4
-	} else if len(slice) < 1 {
-		return 0
-	} else if len(slice) < 2 {
-		return 1
-	} else if len(slice) < 3 {
-		return 2
-	} else if len(slice) < 4 {
-		return 3
-	} else if len(slice) < 5 {
-		return 4
-	}
-
-	return 0
-}
-
-func orgDataBound(slice []string) int {
-	if len(slice) > 7 { // 4 is max amount of entries for pie/bar chart
-		return 7
-	} else if len(slice) < 1 {
-		return 0
-	} else if len(slice) < 2 {
-		return 1
-	} else if len(slice) < 3 {
-		return 2
-	} else if len(slice) < 4 {
-		return 3
-	} else if len(slice) < 5 {
-		return 4
-	} else if len(slice) < 6 {
-		return 5
-	} else if len(slice) < 7 {
-		return 6
-	} else if len(slice) < 8 {
-		return 7
-	}
-
-	return 0
-}
-
-func allZero(s []float64) bool {
-	for _, v := range s {
-		if v != 0 {
-			return false
-		}
-	}
-	return true
 }

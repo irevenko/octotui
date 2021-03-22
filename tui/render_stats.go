@@ -4,18 +4,19 @@ import (
 	"log"
 	"os"
 
+	h "../helpers"
 	"github.com/briandowns/spinner"
 	ui "github.com/gizak/termui"
 	g "github.com/irevenko/octostats/graphql"
 	r "github.com/irevenko/octostats/rest"
 )
 
-const (
-	token = "fb71a5aa6f42d225f4210fb6b20bdebb81ce7cf5"
+var (
+	token = h.LoadToken()
 )
 
 var (
-	ctx, restClient = r.AuthREST(token)
+	Ctx, RestClient = r.AuthREST(token)
 	qlClient        = g.AuthGraphQL(token)
 )
 
@@ -36,7 +37,7 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 
 func renderUser(username string, s *spinner.Spinner) {
 	user := g.UserDetails(qlClient, username)
-	allRepos := r.AllRepos(ctx, restClient, username)
+	allRepos := r.AllRepos(Ctx, RestClient, username)
 
 	img, images := SetupImage(user.AvatarURL, user.Login)
 	p := SetupProfileInfo(user)
@@ -75,7 +76,7 @@ func renderUser(username string, s *spinner.Spinner) {
 
 func renderOrganization(username string, s *spinner.Spinner) {
 	org := g.OrganizationDetails(qlClient, username)
-	allRepos := r.AllRepos(ctx, restClient, username)
+	allRepos := r.AllRepos(Ctx, RestClient, username)
 
 	img, images := SetupImage(org.AvatarURL, org.Login)
 	p := SetupOrgInfo(org)
