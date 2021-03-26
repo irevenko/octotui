@@ -8,7 +8,7 @@ TUI - <a href="https://github.com/gizak/termui">termui</a>  </p> <br>
 ```go get -u github.com/irevenko/octotui``` <br>
 ## Token
 To generate token go here: https://github.com/settings/tokens <br>
-Press ```Generate new token``` and select ```repo, admin:org, user``` <br>
+Press ```Generate new token``` and select ```user``` field<br>
 Put this token into ```HOMEDIR/.config/octotui/token```
 
 # Usage 🔬
