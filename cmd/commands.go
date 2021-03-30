@@ -26,13 +26,22 @@ var Search = &cobra.Command{
 	},
 }
 
-var remoteName string
+var (
+	remoteName    string
+	repoDirectory string
+)
 
 var ByRemote = &cobra.Command{
 	Use:   "by-remote",
 	Short: "Search for github profile by remote URL",
 	Run: func(cmd *cobra.Command, args []string) {
-		gitArgs := []string{"remote", "get-url", remoteName}
+		gitArgs := []string{
+			"-C",
+			repoDirectory,
+			"remote",
+			"get-url",
+			remoteName,
+		}
 		gitCmd := exec.Command("git", gitArgs...)
 		remoteBytes, err := gitCmd.Output()
 
@@ -80,5 +89,12 @@ func init() {
 		"r",
 		"origin",
 		"remote containing the user/organization to search",
+	)
+	ByRemote.PersistentFlags().StringVarP(
+		&repoDirectory,
+		"repo",
+		"d",
+		".",
+		"directory of the git repository",
 	)
 }
