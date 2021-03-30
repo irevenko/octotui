@@ -31,3 +31,13 @@ func TestOwnerBySsh(t *testing.T) {
 		t.Fatalf(`OwnerFromRemote(%q) = %q %v, want "irevenko", nil`, url, owner, err)
 	}
 }
+
+// TestInvalidUrl tests that an invalid URL results in an error.
+func TestInvalidUrl(t *testing.T) {
+	url := "invalid url"
+	owner, err := OwnerFromRemote(url)
+
+	if err != ErrOwnerNotFound {
+		t.Fatalf(`OwnerFromRemote(%q) = %q %v, want "irevenko", nil`, url, owner, err)
+	}
+}
