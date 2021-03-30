@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"log"
+	"os/exec"
 	"strings"
 
 	gh "github.com/irevenko/octotui/github"
+	help "github.com/irevenko/octotui/helpers"
 
 	tui "github.com/irevenko/octotui/tui"
 	"github.com/spf13/cobra"
@@ -27,6 +30,23 @@ var ByRemote = &cobra.Command{
 	Long:  `octotui by-remote [REMOTE_NAME]`,
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		gitArgs := []string{"remote", "get-url"}
+		gitArgs = append(gitArgs, args...)
+		gitCmd := exec.Command("git", gitArgs...)
+		remoteBytes, err := gitCmd.Output()
+
+		if err != nil {
+			log.Fatalf("failed to get remote URL: %v", err)
+		}
+
+		owner, err := help.OwnerFromRemote(string(remoteBytes))
+
+		if err != nil {
+			log.Fatalf("failed to get owner from remote URL: %v", err)
+		}
+
+		println("owner:", owner)
+
 		panic("Not implemented")
 	},
 }
