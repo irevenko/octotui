@@ -38,6 +38,6 @@ func TestInvalidUrl(t *testing.T) {
 	owner, err := OwnerFromRemote(url)
 
 	if err != ErrOwnerNotFound {
-		t.Fatalf(`OwnerFromRemote(%q) = %q %v, want "irevenko", nil`, url, owner, err)
+		t.Fatalf(`OwnerFromRemote(%q) = %q %v, want "", %v`, url, owner, err, ErrOwnerNotFound)
 	}
 }
