@@ -24,14 +24,13 @@ var Search = &cobra.Command{
 	},
 }
 
+var remoteName string
+
 var ByRemote = &cobra.Command{
 	Use:   "by-remote",
 	Short: "Get github profile by remote URL",
-	Long:  `octotui by-remote [REMOTE_NAME]`,
-	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		gitArgs := []string{"remote", "get-url"}
-		gitArgs = append(gitArgs, args...)
+		gitArgs := []string{"remote", "get-url", remoteName}
 		gitCmd := exec.Command("git", gitArgs...)
 		remoteBytes, err := gitCmd.Output()
 
@@ -54,4 +53,14 @@ var ByRemote = &cobra.Command{
 func AddCommands() {
 	RootCmd.AddCommand(Search)
 	RootCmd.AddCommand(ByRemote)
+}
+
+func init() {
+	ByRemote.PersistentFlags().StringVarP(
+		&remoteName,
+		"remote",
+		"r",
+		"origin",
+		"remote containing the user/organization to search",
+	)
 }
