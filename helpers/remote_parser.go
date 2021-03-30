@@ -6,7 +6,7 @@ import (
 )
 
 var githubRegex = regexp.MustCompile(
-	`^(?:(?:git@github\.com:)|(?:https?://github\.com/))([\w\.\-]+)/(?:[\w\.\-]+)\.git$`,
+	`^(?:(?:git@github\.com:)|(?:https?://github\.com/))([\w\.\-]+)/(?:[\w\.\-]+)\.git\n?$`,
 )
 
 // ErrOwnerNotFound signifies no owner could be found from the remote URL
