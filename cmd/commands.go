@@ -21,6 +21,17 @@ var Search = &cobra.Command{
 	},
 }
 
+var ByRemote = &cobra.Command{
+	Use:   "by-remote",
+	Short: "Get github profile by remote URL",
+	Long:  `octotui by-remote [REMOTE_NAME]`,
+	Args:  cobra.MaximumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		panic("Not implemented")
+	},
+}
+
 func AddCommands() {
 	RootCmd.AddCommand(Search)
+	RootCmd.AddCommand(ByRemote)
 }
