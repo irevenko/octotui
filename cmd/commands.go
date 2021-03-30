@@ -44,9 +44,7 @@ var ByRemote = &cobra.Command{
 			log.Fatalf("failed to get owner from remote URL: %v", err)
 		}
 
-		println("owner:", owner)
-
-		panic("Not implemented")
+		Search.Run(cmd, []string{owner})
 	},
 }
 
