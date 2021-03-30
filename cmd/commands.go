@@ -27,8 +27,8 @@ var Search = &cobra.Command{
 var remoteName string
 
 var ByRemote = &cobra.Command{
-	Use:   "by-remote",
-	Short: "Get github profile by remote URL",
+	Use:   "search-by-remote",
+	Short: "Search for github profile by remote URL",
 	Run: func(cmd *cobra.Command, args []string) {
 		gitArgs := []string{"remote", "get-url", remoteName}
 		gitCmd := exec.Command("git", gitArgs...)
