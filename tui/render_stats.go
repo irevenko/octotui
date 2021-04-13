@@ -36,8 +36,14 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 }
 
 func renderUser(username string, s *spinner.Spinner) {
-	user := g.UserDetails(qlClient, username)
-	allRepos := r.AllRepos(Ctx, RestClient, username)
+	user, err := g.UserDetails(qlClient, username)
+	if err != nil {
+		log.Fatalf("Couldn't get user details for: %v: %v", username, err)
+	}
+	allRepos, err := r.AllRepos(Ctx, RestClient, username)
+	if err != nil {
+		log.Fatalf("Couldn't get all repos for: %v: %v", username, err)
+	}
 
 	img, images := SetupImage(user.AvatarURL, user.Login)
 	p := SetupProfileInfo(user)
@@ -75,8 +81,14 @@ func renderUser(username string, s *spinner.Spinner) {
 }
 
 func renderOrganization(username string, s *spinner.Spinner) {
-	org := g.OrganizationDetails(qlClient, username)
-	allRepos := r.AllRepos(Ctx, RestClient, username)
+	org, err := g.OrganizationDetails(qlClient, username)
+	if err != nil {
+		log.Fatalf("Couldn't get org details for: %v: %v", username, err)
+	}
+	allRepos, err := r.AllRepos(Ctx, RestClient, username)
+	if err != nil {
+		log.Fatalf("Couldn't get all repos for: %v: %v", username, err)
+	}
 
 	img, images := SetupImage(org.AvatarURL, org.Login)
 	p := SetupOrgInfo(org)

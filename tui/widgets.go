@@ -106,7 +106,10 @@ func SetupImage(profileImg string, login string) (*widgets.Image, []image.Image)
 
 func SetupLangsByCommits(user g.User) *widgets.PieChart {
 	year, _, _ := time.Now().Date()
-	langs, commits := g.LanguagesByCommit(qlClient, user.Login, year-1, year)
+	langs, commits, err := g.LanguagesByCommit(qlClient, user.Login, year-1, year)
+	if err != nil {
+		log.Fatalf("Couldn't get langs by commit for: %v: %v", user.Login, err)
+	}
 
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by commit"
@@ -251,7 +254,10 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 }
 
 func SetupContribsSparkline(user g.User) *widgets.SparklineGroup {
-	_, contribs := g.YearActivity(qlClient, user.Login)
+	_, contribs, err := g.YearActivity(qlClient, user.Login)
+	if err != nil {
+		log.Fatalf("Couldn't get year activity for: %v: %v", user.Login, err)
+	}
 	timeSpan := 75
 
 	sl := widgets.NewSparkline()

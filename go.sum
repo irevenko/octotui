@@ -165,6 +165,8 @@ github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NH
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/irevenko/octostats v0.0.0-20210322102759-1b4637d700ca h1:ekdEDLVLRCEtaGikLHSXP75bk8PfGlAdF6oOlAcknL4=
 github.com/irevenko/octostats v0.0.0-20210322102759-1b4637d700ca/go.mod h1:FHV+ChJ76Xesp7qr4dyUkbxoNTTF/Rd31RFiP8q4rBA=
+github.com/irevenko/octostats v0.0.0-20210413090023-47f2285d6299 h1:1ESPPFTAkhSwQSEtbHxzz3GDXQHGhX5EzK8ur4lx5EA=
+github.com/irevenko/octostats v0.0.0-20210413090023-47f2285d6299/go.mod h1:FHV+ChJ76Xesp7qr4dyUkbxoNTTF/Rd31RFiP8q4rBA=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=

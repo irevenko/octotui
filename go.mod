@@ -7,7 +7,7 @@ require (
 	github.com/gizak/termui/v3 v3.1.0
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-github/v33 v33.0.0
-	github.com/irevenko/octostats v0.0.0-20210322102759-1b4637d700ca
+	github.com/irevenko/octostats v0.0.0-20210413090023-47f2285d6299
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/nsf/termbox-go v1.1.0 // indirect

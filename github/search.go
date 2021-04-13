@@ -12,7 +12,7 @@ func SearchUser(ctx context.Context, restClient *github.Client, username string)
 
 	users, _, err := restClient.Search.Users(ctx, username, opts)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error while searching for: %v: %v", username, err)
 	}
 
 	return users

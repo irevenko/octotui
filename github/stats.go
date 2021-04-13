@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/google/go-github/v33/github"
@@ -15,7 +16,10 @@ func FetchUserStats(ctx context.Context, restClient *github.Client, qlClient *gi
 	totalForks := r.TotalForks(restClient, allRepos)
 
 	year, _, _ := time.Now().Date()
-	contribs := g.AllContributions(qlClient, username, year-1, year)
+	contribs, err := g.AllContributions(qlClient, username, year-1, year)
+	if err != nil {
+		log.Fatalf("Couldn't get all contribs for: %v: %v", username, err)
+	}
 
 	var totalCommits int
 	var totalIssues int
