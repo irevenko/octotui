@@ -42,10 +42,9 @@ func loadConfigFile(filename string) (contents string, createdPath string, err e
 			createdPath = fullFilename
 			err = errCreatedConfigFile
 			return
-		} else {
-			err = innerErr
-			return
 		}
+		err = innerErr
+		return
 	}
 
 	fileContents, err := ioutil.ReadFile(fullFilename)
