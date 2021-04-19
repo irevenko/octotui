@@ -27,7 +27,7 @@ func loadConfigFile(filename string) (contents string, createdPath string, err e
 	if _, innerErr := os.Stat(fullFilename); innerErr != nil {
 		if os.IsNotExist(innerErr) {
 			innerErr := os.Mkdir(fullConfigPath, 0755)
-			if innerErr != nil {
+			if innerErr != nil && !os.IsExist(innerErr) {
 				err = fmt.Errorf("Unable to create octotui folder in %v", fullConfigPath)
 				return
 			}
