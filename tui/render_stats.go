@@ -27,15 +27,15 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 	defer ui.Close()
 
 	if accType == "(user)" {
-		renderUser(username, s)
+		RenderUser(username, s)
 	}
 
 	if accType == "(organization)" {
-		renderOrganization(username, s)
+		RenderOrganization(username, s)
 	}
 }
 
-func renderUser(username string, s *spinner.Spinner) {
+func RenderUser(username string, s *spinner.Spinner) {
 	user, err := g.UserDetails(qlClient, username)
 	if err != nil {
 		log.Fatalf("Couldn't get user details for: %v: %v", username, err)
@@ -80,7 +80,7 @@ func renderUser(username string, s *spinner.Spinner) {
 	}
 }
 
-func renderOrganization(username string, s *spinner.Spinner) {
+func RenderOrganization(username string, s *spinner.Spinner) {
 	org, err := g.OrganizationDetails(qlClient, username)
 	if err != nil {
 		log.Fatalf("Couldn't get org details for: %v: %v", username, err)
