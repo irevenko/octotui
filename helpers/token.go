@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	tokenPath = "/.config/octotui/token"
+	tokenPath = configPath + "/token"
 )
 
 func LoadToken() string {
