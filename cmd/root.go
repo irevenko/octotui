@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -17,6 +18,12 @@ var RootCmd = &cobra.Command{
 
 		if owner == "" {
 			log.Fatalf("Owner is empty. Either add data or use the search subcommand.")
+		}
+
+		nameAndType := strings.Split(owner, ":")
+
+		if len(nameAndType) != 2 {
+			log.Fatalf("Default owner must be in format \"name:type\" where type is either %q or %q", h.Org, h.User)
 		}
 	},
 }
