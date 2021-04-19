@@ -32,3 +32,13 @@ func LoadOwner() string {
 	}
 	return owner
 }
+
+// IsOrg checks if owner is a GitHub organization.
+func (owner OwnerType) IsOrg() bool {
+	return owner == Org
+}
+
+// IsUser checks if owner is a GitHub user.
+func (owner OwnerType) IsUser() bool {
+	return owner == User
+}
