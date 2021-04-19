@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 
@@ -13,6 +13,10 @@ var RootCmd = &cobra.Command{
 	Short: "GitHub stats in your terminal",
 	Long:  `Complete documentation is available at https://github.com/irevenko/octotui`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(h.LoadOwner())
+		owner := h.LoadOwner()
+
+		if owner == "" {
+			log.Fatalf("Owner is empty. Either add data or use the search subcommand.")
+		}
 	},
 }
