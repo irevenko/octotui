@@ -34,7 +34,7 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 	}
 
 	if accType == "(organization)" {
-		renderOrganization(username, s)
+		renderOrganization(username, s, grid)
 	}
 }
 
@@ -115,7 +115,7 @@ func renderUser(username string, s *spinner.Spinner, grid *ui.Grid) {
 	}
 }
 
-func renderOrganization(username string, s *spinner.Spinner) {
+func renderOrganization(username string, s *spinner.Spinner, grid *ui.Grid) {
 	org, err := g.OrganizationDetails(qlClient, username)
 	if err != nil {
 		log.Fatalf("Couldn't get org details for: %v: %v", username, err)
@@ -135,7 +135,25 @@ func renderOrganization(username string, s *spinner.Spinner) {
 
 	render := func() {
 		img.Image = images[0]
-		ui.Render(img, p, p2, p3, bc, bc2, pc2)
+		grid.Set(
+			ui.NewCol(
+				0.25,
+				ui.NewRow(1.0/3, img),
+				ui.NewRow(2.0/3, p),
+			),
+			ui.NewCol(
+				0.25,
+				ui.NewRow(0.25, p2),
+				ui.NewRow(0.75, p3),
+			),
+			ui.NewCol(
+				0.5,
+				ui.NewRow(0.25, bc2),
+				ui.NewRow(0.25, bc),
+				ui.NewRow(0.5, pc2),
+			),
+		)
+		ui.Render(grid)
 	}
 	s.Stop()
 	render()
