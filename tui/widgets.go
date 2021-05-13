@@ -27,7 +27,6 @@ func SetupProfileInfo(user g.User) *widgets.Paragraph {
 	p.WrapText = true
 	p.Border = true
 	p.Text = gh.BuildUserInfo(user)
-	p.SetRect(0, 35, 35, 14)
 
 	return p
 }
@@ -37,7 +36,6 @@ func SetupProfileStats(user g.User, allRepos []*github.Repository) *widgets.Para
 	p.WrapText = true
 	p.Text = gh.BuildUserStats(Ctx, RestClient, qlClient, user, allRepos)
 	p.Border = true
-	p.SetRect(35, 0, 70, 20)
 
 	return p
 }
@@ -47,7 +45,6 @@ func SetupReposStats(user g.User, allRepos []*github.Repository) *widgets.Paragr
 	p.WrapText = true
 	p.Border = true
 	p.Text = gh.BuildUserRepos(RestClient, user, allRepos)
-	p.SetRect(70, 10, 105, 20)
 
 	return p
 }
@@ -57,7 +54,6 @@ func SetupOrgInfo(org g.Organization) *widgets.Paragraph {
 	p.WrapText = true
 	p.Border = true
 	p.Text = gh.BuildOrgInfo(org)
-	p.SetRect(0, 35, 35, 14)
 
 	return p
 }
@@ -67,7 +63,6 @@ func SetupOrgStats(org g.Organization, allRepos []*github.Repository) *widgets.P
 	p.WrapText = true
 	p.Text = gh.BuildOrgStats(Ctx, RestClient, qlClient, org, allRepos)
 	p.Border = true
-	p.SetRect(35, 0, 70, 12)
 
 	return p
 }
@@ -77,7 +72,6 @@ func SetupOrgRepos(org g.Organization, allRepos []*github.Repository) *widgets.P
 	p.WrapText = true
 	p.Border = true
 	p.Text = gh.BuildOrgRepos(RestClient, allRepos)
-	p.SetRect(35, 12, 70, 35)
 
 	return p
 }
@@ -98,7 +92,6 @@ func SetupImage(profileImg string, login string) (*widgets.Image, []image.Image)
 	images = append(images, image)
 
 	img := widgets.NewImage(nil)
-	img.SetRect(0, 0, 30, 14)
 	img.Title = login + "'s GitHub"
 
 	return img, images
@@ -113,7 +106,6 @@ func SetupLangsByCommits(user g.User) *widgets.PieChart {
 
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by commit"
-	pc.SetRect(35, 35, 70, 20)
 
 	boundNum := h.UserDataBound(langs)
 	if boundNum == 0 {
@@ -136,12 +128,7 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 	pc := widgets.NewPieChart()
 	pc.Title = "Languages by repo"
 
-	userCords := [4]int{105, 35, 70, 20}
-	orgCords := [4]int{115, 16, 70, 35}
-
 	if accType == "user" {
-		pc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
-
 		boundNum := h.UserDataBound(usedLangs)
 		if boundNum == 0 {
 			pc.Title = "Langs by repo (no repos)"
@@ -151,8 +138,6 @@ func SetupLangsByRepo(allRepos []*github.Repository, accType string) *widgets.Pi
 	}
 
 	if accType == "organization" {
-		pc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
-
 		boundNum := h.OrgDataBound(usedLangs)
 		if boundNum == 0 {
 			pc.Title = "Langs by repo (no repos)"
@@ -175,12 +160,7 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	bc := widgets.NewBarChart()
 	bc.Title = "Stars per language"
 
-	userCords := [4]int{150, 35, 105, 20}
-	orgCords := [4]int{70, 16, 150, 8}
-
 	if accType == "user" {
-		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
-
 		bound := h.UserDataBound(starsPerL)
 		if bound == 0 || h.AllZero(starsNum[:bound]) {
 			bc.Title = "Stars per language (no stars)"
@@ -191,8 +171,6 @@ func SetupStarsPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	}
 
 	if accType == "organization" {
-		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
-
 		bound := h.OrgDataBound(starsPerL)
 		if bound == 0 || h.AllZero(starsNum[:bound]) {
 			bc.Title = "Stars per language (no stars)"
@@ -217,12 +195,7 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	bc := widgets.NewBarChart()
 	bc.Title = "Forks per language"
 
-	userCords := [4]int{150, 10, 105, 20}
-	orgCords := [4]int{70, 0, 150, 8}
-
 	if accType == "user" {
-		bc.SetRect(userCords[0], userCords[1], userCords[2], userCords[3])
-
 		bound := h.UserDataBound(forksPerL)
 		if bound == 0 || h.AllZero(forksNum[:bound]) {
 			bc.Title = "Forks per language (no forks)"
@@ -233,8 +206,6 @@ func SetupForksPerLangs(allRepos []*github.Repository, accType string) *widgets.
 	}
 
 	if accType == "organization" {
-		bc.SetRect(orgCords[0], orgCords[1], orgCords[2], orgCords[3])
-
 		bound := h.OrgDataBound(forksPerL)
 		if bound == 0 || h.AllZero(forksNum[:bound]) {
 			bc.Title = "Forks per language (no forks)"
@@ -267,7 +238,6 @@ func SetupContribsSparkline(user g.User) *widgets.SparklineGroup {
 
 	slg := widgets.NewSparklineGroup(sl)
 	slg.Title = "Activity for the last " + strconv.Itoa(timeSpan) + " days"
-	slg.SetRect(150, 0, 70, 10)
 
 	return slg
 }
