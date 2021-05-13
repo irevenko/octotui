@@ -25,9 +25,12 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
 	defer ui.Close()
+	width, height := ui.TerminalDimensions()
+	grid := ui.NewGrid()
+	grid.SetRect(0, 0, width, height)
 
 	if accType == "(user)" {
-		renderUser(username, s)
+		renderUser(username, s, grid)
 	}
 
 	if accType == "(organization)" {
@@ -35,7 +38,7 @@ func RenderStats(username string, accType string, s *spinner.Spinner) {
 	}
 }
 
-func renderUser(username string, s *spinner.Spinner) {
+func renderUser(username string, s *spinner.Spinner, grid *ui.Grid) {
 	user, err := g.UserDetails(qlClient, username)
 	if err != nil {
 		log.Fatalf("Couldn't get user details for: %v: %v", username, err)
@@ -57,7 +60,39 @@ func renderUser(username string, s *spinner.Spinner) {
 
 	render := func() {
 		img.Image = images[0]
-		ui.Render(img, p, p2, pc, pc2, sl, bc, bc2, p3)
+		grid.Set(
+			ui.NewCol(
+				0.25,
+				ui.NewRow(1.0/3, img),
+				ui.NewRow(2.0/3, p),
+			),
+			ui.NewCol(
+				0.25,
+				ui.NewRow(0.625, p2),
+				ui.NewRow(0.375, pc),
+			),
+			ui.NewCol(
+				0.5,
+				ui.NewRow(
+					0.25,
+					sl,
+				),
+				ui.NewRow(
+					0.75,
+					ui.NewCol(
+						0.5,
+						ui.NewRow(0.5, p3),
+						ui.NewRow(0.5, pc2),
+					),
+					ui.NewCol(
+						0.5,
+						ui.NewRow(0.5, bc2),
+						ui.NewRow(0.5, bc),
+					),
+				),
+			),
+		)
+		ui.Render(grid)
 	}
 	s.Stop()
 	render()
