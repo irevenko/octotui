@@ -21,6 +21,6 @@ var Search = &cobra.Command{
 	},
 }
 
-func AddCommands() {
+func init() {
 	RootCmd.AddCommand(Search)
 }
