@@ -25,11 +25,11 @@ func LoadToken() string {
 				log.Fatal("Unable to create octotui folder in " + home + "/.config")
 			}
 
-			blackListFile, err := os.OpenFile(home+tokenPath, os.O_RDONLY|os.O_CREATE, 0644)
+			tokenFile, err := os.OpenFile(home+tokenPath, os.O_RDONLY|os.O_CREATE, 0644)
 			if err != nil {
 				log.Fatal("Unable to create token file in " + home + tokenPath)
 			}
-			blackListFile.Close()
+			tokenFile.Close()
 
 			fmt.Println("Created token file in: " + home + tokenPath)
 			fmt.Println("Put your github token in this file")
